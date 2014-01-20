@@ -1,6 +1,7 @@
 package com.radio.radioroks;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -17,16 +18,18 @@ public class OnlineState extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.online);
-		online = (WebView) findViewById(R.id.webViewOnline);
+
 		settingParamsForLayout();
 		online.loadUrl(MOBILE_ROKS);
 
 	}
 
 	private void settingParamsForLayout() {
+		online = (WebView) findViewById(R.id.webViewOnline);
 		online.getSettings().setBuiltInZoomControls(true);
 		online.setFocusableInTouchMode(false);
 		online.setFocusable(false);
+		online.setBackgroundColor(Color.TRANSPARENT);
 		online.setWebViewClient(new WebViewClient() {
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 				return true;
@@ -35,5 +38,6 @@ public class OnlineState extends Activity {
 
 		WebSettings settings = online.getSettings();
 		settings.setDefaultTextEncodingName("utf-8");
+		settings.setDefaultFontSize(20);
 	}
 }
