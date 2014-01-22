@@ -6,14 +6,14 @@ import android.app.Activity;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ImageButton;
 
-public class MainActivity extends Activity implements OnClickListener,
-		OnPreparedListener {
+public class MainActivity extends Activity implements OnClickListener {
 	ImageButton buttonBack, buttonPlay, buttonForvard;
 	MediaPlayer mediaPlayer;
 
@@ -22,11 +22,15 @@ public class MainActivity extends Activity implements OnClickListener,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-		getActionBar().hide();
+		removeActionBar();
 		setContentView(R.layout.activity_main);
 		initializationAndSettingListeners();
 
+	}
+
+	private void removeActionBar() {
+		getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
+		getActionBar().hide();
 	}
 
 	private void initializationAndSettingListeners() {
@@ -44,7 +48,7 @@ public class MainActivity extends Activity implements OnClickListener,
 		case R.id.buttonPlay:
 
 			try {
-				playStream(AUDIO);
+				new StreamingThread().execute(AUDIO);
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -52,9 +56,6 @@ public class MainActivity extends Activity implements OnClickListener,
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -65,24 +66,6 @@ public class MainActivity extends Activity implements OnClickListener,
 		/*
 		 * case R.id.buttonOfficialSite: start new Intent with site params
 		 */
-
-	}
-
-	private void playStream(String url) throws IllegalArgumentException,
-			SecurityException, IllegalStateException, IOException {
-		resetMediaPlayer();
-		mediaPlayer = new MediaPlayer();
-		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-		mediaPlayer.setDataSource(url);
-		mediaPlayer.setOnPreparedListener(this);
-		mediaPlayer.prepareAsync();
-
-	}
-
-	@Override
-	public void onPrepared(MediaPlayer mp) {
-
-		mediaPlayer.start();
 
 	}
 
@@ -105,4 +88,40 @@ public class MainActivity extends Activity implements OnClickListener,
 		finish();
 	}
 
+	public class StreamingThread extends AsyncTask<String, Integer, String>
+			implements OnPreparedListener {
+
+		@Override
+		protected String doInBackground(String... params) {
+			String s = params[0];
+
+			mediaPlayer = new MediaPlayer();
+			mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+			try {
+				mediaPlayer.setDataSource(s);
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			mediaPlayer.setOnPreparedListener(this);
+			mediaPlayer.prepareAsync();
+
+			return null;
+		}
+
+		@Override
+		public void onPrepared(MediaPlayer mp) {
+			mediaPlayer.start();
+		}
+
+	}
 }
