@@ -3,6 +3,7 @@ package com.radio.radioroks;
 import java.io.IOException;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
@@ -15,9 +16,10 @@ import android.widget.ImageButton;
 
 public class MainActivity extends Activity implements OnClickListener {
 	ImageButton buttonBack, buttonPlay, buttonForvard;
-	MediaPlayer mediaPlayer;
-
-	static final String AUDIO = "http://online-radioroks.tavrmedia.ua:8000/RadioROKS_32";
+	static MediaPlayer mediaPlayer = new MediaPlayer();
+	MainActivity.StreamingThread roksStationOnlineStream = new StreamingThread();
+	// TODO start playing from local file instead
+	static final String AUDIO = "http://online-radioroks.tavrmedia.ua:8000/RadioROKS";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,19 +38,21 @@ public class MainActivity extends Activity implements OnClickListener {
 	private void initializationAndSettingListeners() {
 
 		findViewById(R.id.buttonPlay).setOnClickListener(this);
-
-		// Roks site
-		// findViewById(R.id.buttonOfficialSite).setOnClickListener(this);
+		findViewById(R.id.buttonRecantlyPlayedSongsActivity)
+				.setOnClickListener(this);
 
 	}
 
 	@Override
 	public void onClick(View v) {
+
 		switch (v.getId()) {
 		case R.id.buttonPlay:
 
 			try {
-				new StreamingThread().execute(AUDIO);
+
+				roksStationOnlineStream.execute(AUDIO);
+
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -59,7 +63,9 @@ public class MainActivity extends Activity implements OnClickListener {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
+			break;
+		case R.id.buttonRecantlyPlayedSongsActivity:
+			new RecentlyPlayedOnSite().execute();
 			break;
 		}
 
@@ -76,6 +82,8 @@ public class MainActivity extends Activity implements OnClickListener {
 			} catch (Exception e) {
 
 			}
+		} else {
+			return;
 		}
 
 	}
@@ -93,9 +101,9 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		@Override
 		protected String doInBackground(String... params) {
+
 			String s = params[0];
 
-			mediaPlayer = new MediaPlayer();
 			mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 			try {
 				mediaPlayer.setDataSource(s);
@@ -124,4 +132,24 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 
 	}
+
+	// TODO
+	public void sendMessage(View view) {
+
+	}
+
+	public class RecentlyPlayedOnSite extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			Intent intent = new Intent(MainActivity.this,
+					RecentlyPlayedSongs.class);
+			startActivity(intent);
+
+			return null;
+
+		}
+
+	}
+
 }

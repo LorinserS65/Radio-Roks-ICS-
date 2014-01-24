@@ -7,7 +7,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-public class OnlineState extends Activity {
+public class RecentlyPlayedSongs extends Activity {
 	WebView online;
 	// final static String MOBILE_ROKS = "http://m.radioroks.com.ua/";
 
@@ -40,4 +40,5 @@ public class OnlineState extends Activity {
 		settings.setDefaultTextEncodingName("utf-8");
 		settings.setDefaultFontSize(20);
 	}
+
 }
