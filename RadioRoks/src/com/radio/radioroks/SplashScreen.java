@@ -2,6 +2,7 @@ package com.radio.radioroks;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Window;
@@ -27,6 +28,16 @@ public class SplashScreen extends Activity {
 				finish();
 			}
 		}, SPLASH_TIME_OUT);
+	}
+
+	class SplashInBackground extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... params) {
+
+			return null;
+		}
+
 	}
 
 	private void removeActionBar() {

@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/background_hdpi"
+    android:background="@drawable/background_xxhdpi"
     android:focusable="false"
     android:orientation="vertical"
     tools:context=".MainActivity" >
@@ -28,7 +28,7 @@
         <ImageButton
             android:id="@+id/buttonRecantlyPlayedSongsActivity"
             android:layout_width="170dp"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:background="@drawable/button_before_played"
             android:clickable="true"
             android:padding="10dp"
